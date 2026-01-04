@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You</title>
+    <style>
+        :root {
+            --bg: #fffcf9;
+            --text: #333;
+            --accent: #d63031;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Georgia', serif;
+            overflow-x: hidden;
+        }
+
+        section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 20px;
+            box-sizing: border-box;
+            transition: opacity 1s ease;
+        }
+
+        /* --- Animations --- */
+        .slide-up-fade {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1.2s ease-out;
+        }
+
+        .slide-up-fade.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fade-out {
+            opacity: 0 !important;
+            pointer-events: none;
+        }
+
+        /* --- Photo Cards --- */
+        .gallery {
+            max-width: 650px;
+            width: 100%;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            margin-bottom: 80px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+
+        .card p {
+            line-height: 1.8;
+            font-size: 1.05rem;
+            margin-top: 20px;
+            color: #444;
+            padding: 0 10px;
+        }
+
+        /* --- Page 3 Elements --- */
+        #page3 {
+            display: none;
+            text-align: center;
+        }
+
+        .slide-right-text {
+            opacity: 0;
+            transform: translateX(-100px);
+            transition: all 1s ease;
+        }
+
+        .slide-right-text.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .move-up {
+            transform: translateY(-40px);
+        }
+
+        #audio-container {
+            opacity: 0;
+            transition: opacity 1s ease, transform 1s ease;
+            transform: translateY(20px);
+        }
+
+        #audio-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        button {
+            padding: 12px 30px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 20px;
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <section id="page1">
+        <h1 class="slide-up-fade" id="p1-title">let's start with it</h1>
+        <button onclick="startJourney()">Click to begin</button>
+    </section>
+
+    <section id="page2" class="hidden">
+        <div class="gallery">
+            <div class="card slide-up-fade">
+                <img src="https://i.ibb.co/R4PDKZZs/image.jpg" alt="Photo 1">
+                <p>You're a vision of poise and elegance, framed beautifully by the weathered stone pillars of an ancient temple. The way the warm sunlight hits your face highlights your soft features and gentle expression, making you look absolutely radiant. Your traditional Newar dress with its vibrant red trim stands out perfectly against the muted tones of the historic architecture, creating a scene that feels both timeless and deeply charming.</p>
+            </div>
+
+            <div class="card slide-up-fade">
+                <img src="https://i.ibb.co/wrRsrhyX/image.jpg" alt="Photo 2">
+                <p>Your natural cuteness truly shines through. As you lean against the intricate carvings, there is a playful yet serene quality to your gaze that is incredibly captivating. The delicate gold ornaments in your hair catch the light, adding a touch of sparkle to your look, while your effortless grace makes you appear like a modern-day princess in a historic setting.</p>
+            </div>
+
+            <div class="card slide-up-fade">
+                <img src="https://i.ibb.co/1fNjYD2T/image.jpg" alt="Photo 3">
+                <p>The focus on your profile emphasizes you striking beauty and the thoughtful expression you acquire. You looks peaceful and grounded, mirroring the stability of the grand stone columns around you. The combination of your classic attire and the ancient backdrop tells a story of cultural pride and individual beauty, making this particular shot feel both powerful and incredibly lovely.</p>
+            </div>
+
+            <div class="card slide-up-fade">
+                <img src="https://i.ibb.co/Vc8RXPKm/image.jpg" alt="Photo 4">
+                <p>You amidst the architectural grandeur with a look of quiet confidence. Your presence adds life and warmth to the cold stone, proving that your beauty is not just about your physical features but also the aura of kindness and serenity you carry. It is a stunning conclusion to the series, leaving a lasting impression of a girl who is as elegant as she is naturally adorable.</p>
+            </div>
+
+            <button onclick="endPage2()">See the song</button>
+        </div>
+    </section>
+
+    <section id="page3">
+        <h2 id="p3-text" class="slide-right-text">noticed you reposting this song a lot</h2>
+        <div id="audio-container">
+            <p>A song that describes you.</p>
+            <audio id="main-audio" controls>
+                <source src="https://files.catbox.moe/sidxat.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+    </section>
+
+    <script>
+        // Page 1 Slide Up/Fade In on Load
+        window.onload = () => {
+            setTimeout(() => {
+                document.getElementById('p1-title').classList.add('active');
+            }, 500);
+        };
+
+        function startJourney() {
+            document.getElementById('page1').classList.add('fade-out');
+            setTimeout(() => {
+                document.getElementById('page1').classList.add('hidden');
+                document.getElementById('page2').classList.remove('hidden');
+                
+                // Set up observer for scroll-based slide up
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('active');
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                document.querySelectorAll('.card').forEach(card => observer.observe(card));
+            }, 1000);
+        }
+
+        function endPage2() {
+            document.getElementById('page2').classList.add('fade-out');
+            setTimeout(() => {
+                document.getElementById('page2').classList.add('hidden');
+                document.getElementById('page3').style.display = 'flex';
+                
+                // Step 1: Slide Right Text
+                setTimeout(() => {
+                    const text = document.getElementById('p3-text');
+                    text.classList.add('active');
+                    
+                    // Step 2: Slide Text UP and Bring Audio
+                    setTimeout(() => {
+                        text.classList.add('move-up');
+                        document.getElementById('audio-container').classList.add('show');
+                        document.getElementById('main-audio').play();
+                    }, 2000);
+                }, 500);
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
